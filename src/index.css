@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Sora:wght@100..800&display=swap');
+
+:root {
+  /* ── Backgrounds ──────────────────────────── */
+  --bg-primary:   #060304;
+  --bg-secondary: #0d0809;
+  --bg-glass:     rgba(13, 8, 9, 0.4);
+  --bg-glass-hover: rgba(255, 255, 255, 0.03);
+  --bg-card:      rgba(255, 255, 255, 0.01);
+  --glass-border: rgba(255, 255, 255, 0.06);
+
+  /* ── Text ─────────────────────────────────── */
+  --text-primary:   #f0ece8;
+  --text-secondary: #a09894;
+  --text-muted:     #6a605c;
+
+  /* ── Accent — Maroon/Crimson ──────────────── */
+  --accent-color:    #e8294f;
+  --accent-hover:    #ff456a;
+  --accent-glow:     rgba(232, 41, 79, 0.35);
+  --accent-soft:     rgba(232, 41, 79, 0.15);
+  --accent-gradient: linear-gradient(135deg, #a30021 0%, #e8294f 50%, #ff6b87 100%);
+
+  /* ── Typography Stack ─────────────────────── */
+  --font-display: 'Sora', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  
+  /* ── Shadows ──────────────────────────────── */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 14px 20px -3px rgba(0, 0, 0, 0.6), 0 6px 8px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 30px 40px -5px rgba(0, 0, 0, 0.8), 0 15px 15px -5px rgba(0, 0, 0, 0.6);
+
+  /* ── Transitions & Radii ─────────────────── */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+html {
+  /* Resizes the entire global interface down, scaling px/em/rem making the interface proportional and less bulky */
+  zoom: 0.85; 
+  height: 100%;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-glass-hover) transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(ellipse at top left, rgba(139, 0, 30, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(192, 20, 60, 0.08) 0%, transparent 60%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+body::after {
+  content: '';
+  position: fixed; 
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+}
+
+::-webkit-scrollbar            { width: 8px; height: 8px; }
+::-webkit-scrollbar-track      { background: transparent; }
+::-webkit-scrollbar-thumb      { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--text-muted); }
+
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg);
+}
+
+.layout {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--bg-glass-hover);
+  border-top-color: var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Sidebar toggle compat */
+.sidebar.closed + .main-content .channel-list-container {
+  padding-left: 80px;
+}

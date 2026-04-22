@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/sakura_logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SakuraStream. - Free Live TV & Music Streaming</title>
+
+  <!-- SEO -->
+  <meta name="description"
+    content="SakuraStream — Experience 6,000+ free live global TV channels and ad-free music streaming in a beautifully crafted, glassmorphic platform." />
+
+  <!-- Security Headers -->
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+  <!-- PWA Setup -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#e8294f" />
+  <link rel="apple-touch-icon" href="/sakura_logo.png" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js")
+          .then(registration => {
+            console.log("Service Worker registered with scope:", registration.scope);
+          })
+          .catch(error => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
+  </script>
+</body>
+
+</html>
