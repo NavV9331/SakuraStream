@@ -27,7 +27,19 @@ const Sidebar = ({
                 counts[cat] = (counts[cat] || 0) + 1;
             });
         });
-        return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 20); // top 20
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+        const topCategories = sorted.slice(0, 20); // top 20
+
+        if (counts['FIFA Channels'] && !topCategories.some(c => c[0] === 'FIFA Channels')) {
+            topCategories.unshift(['FIFA Channels', counts['FIFA Channels']]);
+        } else if (counts['FIFA Channels']) {
+            // If it's already in the top 20, move it to the front
+            const index = topCategories.findIndex(c => c[0] === 'FIFA Channels');
+            const item = topCategories.splice(index, 1)[0];
+            topCategories.unshift(item);
+        }
+
+        return topCategories;
     }, [channels]);
 
     const languages = React.useMemo(() => {

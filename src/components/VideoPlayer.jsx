@@ -3,6 +3,7 @@ import Hls from 'hls.js';
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
 import { X, AlertCircle } from 'lucide-react';
+import { buildDlhdEmbedUrl, getAllEmbedUrls } from '../services/dlhdChannels';
 import './VideoPlayer.css';
 
 const VideoPlayer = ({ channel, onClose, isEmbedded = false }) => {
@@ -10,6 +11,9 @@ const VideoPlayer = ({ channel, onClose, isEmbedded = false }) => {
     const [error, setError] = useState(false);
     const [imgError, setImgError] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [currentFolderIndex, setCurrentFolderIndex] = useState(0);
+
+    const isIframeSource = channel.source === 'dlhd' || channel.source === 'youtube';
 
     const handleLogoError = () => {
         setImgError(true);
@@ -17,7 +21,10 @@ const VideoPlayer = ({ channel, onClose, isEmbedded = false }) => {
 
     const displayLogo = channel.logo;
 
+    // ── Standard HLS player setup (non-DLHD channels) ──
     useEffect(() => {
+        if (isIframeSource) return; // DLHD/YouTube channels use iframe, skip HLS setup
+
         const streamUrl = channel.streams && channel.streams.length > 0
             ? channel.streams[0].url
             : null;
@@ -110,7 +117,7 @@ const VideoPlayer = ({ channel, onClose, isEmbedded = false }) => {
             if (player) player.destroy();
             if (hls) hls.destroy();
         };
-    }, [channel]);
+    }, [channel, isIframeSource]);
 
     const handleStartPlay = () => {
         if (videoRef.current) {
@@ -118,7 +125,77 @@ const VideoPlayer = ({ channel, onClose, isEmbedded = false }) => {
         }
     };
 
-    const playerContent = (
+    // ── Try next DLHD embed folder if current one fails ──
+    const handleTryNextSource = () => {
+        const folders = getAllEmbedUrls(channel.dlhdId);
+        if (currentFolderIndex < folders.length - 1) {
+            setCurrentFolderIndex(prev => prev + 1);
+        }
+    };
+
+    // ── Get current embed URL (DLHD or YouTube) ──
+    const getEmbedUrl = () => {
+        if (channel.source === 'dlhd') {
+            return buildDlhdEmbedUrl(channel.dlhdId, currentFolderIndex);
+        }
+        if (channel.source === 'youtube') {
+            return channel.streams[0].url;
+        }
+        return null;
+    };
+    const embedUrl = isIframeSource ? getEmbedUrl() : null;
+
+    // ── Iframe-based Player (DLHD / YouTube) ──
+    const iframePlayerContent = isIframeSource ? (
+        <div className={`video-modal-content ${isEmbedded ? 'embedded-player' : 'glass-panel'} jw-player-skin`}>
+            <div className="video-header">
+                <div className="video-title">
+                    {displayLogo && !imgError && (
+                        <img 
+                            src={displayLogo} 
+                            alt={channel.name} 
+                            className="video-header-logo" 
+                            onError={handleLogoError} 
+                        />
+                    )}
+                    <h3>{channel.name}</h3>
+                    {channel.categoryNames && channel.categoryNames[0] && (
+                        <span className="badge">{channel.categoryNames[0]}</span>
+                    )}
+                </div>
+                <button className="close-btn" onClick={onClose}>
+                    <X size={24} />
+                </button>
+            </div>
+
+            <div className="video-container dlhd-iframe-container">
+                <iframe
+                    src={embedUrl}
+                    className="dlhd-iframe"
+                    allowFullScreen
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    referrerPolicy="no-referrer"
+                    title={channel.name}
+                    {...(channel.source === 'dlhd' ? { sandbox: "allow-scripts allow-same-origin allow-forms allow-presentation" } : {})}
+                />
+                {channel.source === 'dlhd' && (
+                    <div className="dlhd-source-switcher">
+                        <span className="source-label">Source {currentFolderIndex + 1}/6</span>
+                        <button 
+                            className="try-next-btn"
+                            onClick={handleTryNextSource}
+                            disabled={currentFolderIndex >= 5}
+                        >
+                            Try Next Source →
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    ) : null;
+
+    // ── Standard HLS Player ──
+    const standardPlayerContent = !isIframeSource ? (
         <div className={`video-modal-content ${isEmbedded ? 'embedded-player' : 'glass-panel'} jw-player-skin`}>
             <div className="video-header">
                 <div className="video-title">
@@ -172,7 +249,9 @@ const VideoPlayer = ({ channel, onClose, isEmbedded = false }) => {
                 )}
             </div>
         </div>
-    );
+    ) : null;
+
+    const playerContent = isIframeSource ? iframePlayerContent : standardPlayerContent;
 
     if (isEmbedded) {
         return playerContent;
@@ -186,3 +265,4 @@ const VideoPlayer = ({ channel, onClose, isEmbedded = false }) => {
 };
 
 export default VideoPlayer;
+

@@ -46,7 +46,7 @@ const ChannelList = ({ channels, searchTerm, activeCategory, activeCountry, acti
             <div className="list-header">
                 <h2>
                     {activeLanguage ? `${activeLanguage} Channels` :
-                        activeCategory ? `${activeCategory} Channels` :
+                        activeCategory ? (activeCategory.toLowerCase().includes('channel') ? activeCategory : `${activeCategory} Channels`) :
                             activeCountry ? `Channels in ${activeCountry}` :
                                 'Explore Channels'}
                 </h2>
@@ -58,7 +58,7 @@ const ChannelList = ({ channels, searchTerm, activeCategory, activeCountry, acti
                     <ChannelCard
                         key={channel.id}
                         channel={channel}
-                        onClick={() => onChannelSelect(channel)}
+                        onSelect={onChannelSelect}
                     />
                 ))}
                 {currentItems.length === 0 && (

@@ -34,6 +34,7 @@
 .channel-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    align-content: start;
     gap: 24px;
     flex: 1;
 }
@@ -53,6 +54,11 @@
 .channel-grid > *:nth-child(7) { animation-delay: 0.35s; }
 .channel-grid > *:nth-child(8) { animation-delay: 0.4s; }
 .channel-grid > *:nth-child(n+9) { animation-delay: 0.45s; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 
 .no-results {
     grid-column: 1 / -1;

@@ -145,16 +145,6 @@
 .mu-lib-title svg { color: var(--text-secondary); }
 
 /* Library search */
-.mu-lang-btn {
-    display: flex; align-items: center; gap: 12px;
-    padding: 8px 16px; border-radius: 500px;
-    background: var(--bg-card); border: 1px solid var(--glass-border);
-    color: #fff; cursor: pointer; transition: 0.2s;
-}
-.mu-lang-btn:hover { background: var(--bg-glass-hover); border-color: var(--accent-color); }
-.mu-lang-btn-text { display: flex; align-items: center; gap: 6px; }
-.mu-lang-btn-label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
-.mu-lang-btn-current { font-size: 0.85rem; font-weight: 700; color: var(--accent-hover); }
 /* Library search */
 .mu-lib-search {
     display: flex;
@@ -474,7 +464,6 @@
 
 /* Sections & Grids */
 .mu-section { margin-bottom: 32px; }
-.mu-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .mu-section-header { 
     display: flex; 
     align-items: flex-end; 
@@ -1646,7 +1635,7 @@
     
     /* Typography & Header Alignment Fixes */
     .mu-vcard, .mu-home-hero { padding: 10px; }
-    .mu-vcard-img { height: 130px; }
+    .mu-vcard-img { max-height: 180px; }
     .mu-hero-title { font-size: 1.8rem !important; }
     
     .mu-section-header { 

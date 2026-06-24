@@ -14,7 +14,7 @@ import './Music.css';
 
 
 
-const JIOSAAVN_BASE = 'https://jiosaavn-api-privatecvc2.vercel.app';
+const JIOSAAVN_BASE = 'https://jiosaavnn.vercel.app';
 
 const LANG_LIST = [
     'Hindi', 'English',
@@ -492,22 +492,22 @@ const Music = () => {
     const [historyPointer, setHistoryPointer] = useState(0);
     const isNavigatingHistory = useRef(false);
 
+    const historyPointerRef = useRef(historyPointer);
+    useEffect(() => { historyPointerRef.current = historyPointer; }, [historyPointer]);
+
     const pushToHistory = useCallback((newView, newQuery) => {
         if (isNavigatingHistory.current) return;
         setNavHistory(prev => {
-            // We use a functional state update to access the 'prev' list correctly
-            // but we still need the historyPointer to truncate correctly.
-            // Since historyPointer is a State, we'll use its value at the time of call.
-            const next = prev.slice(0, (window._mu_ptr || 0) + 1);
+            const ptr = historyPointerRef.current;
+            const next = prev.slice(0, ptr + 1);
             const current = next[next.length - 1];
             if (current && current.view === newView && current.query === newQuery) return prev;
 
             const updated = [...next, { view: newView, query: newQuery }];
             setHistoryPointer(updated.length - 1);
-            window._mu_ptr = updated.length - 1; // Mirror to avoid loop if possible
             return updated;
         });
-    }, []); // Removed historyPointer from dependencies
+    }, []);
 
     const goHistoryBack = () => {
         if (historyPointer > 0) {
@@ -516,17 +516,16 @@ const Music = () => {
             setView(prev.view);
             setActiveQuery(prev.query);
             setHistoryPointer(historyPointer - 1);
-            window._mu_ptr = historyPointer - 1;
             setTimeout(() => { isNavigatingHistory.current = false; }, 50);
         }
     };
 
     const goHistoryForward = () => {
         if (historyPointer < navHistory.length - 1) {
-            const next = navHistory[historyPointer + 1];
+            const nextEntry = navHistory[historyPointer + 1];
             isNavigatingHistory.current = true;
-            setView(next.view);
-            setActiveQuery(next.query);
+            setView(nextEntry.view);
+            setActiveQuery(nextEntry.query);
             setHistoryPointer(historyPointer + 1);
             setTimeout(() => { isNavigatingHistory.current = false; }, 50);
         }
@@ -780,7 +779,7 @@ const Music = () => {
             } else { setTracks([]); }
         } catch { setError('Could not reach Sakura Musics. Check your connection.'); }
         finally { setLoading(false); }
-    }, [musicLanguages, view, currentTrack]); // eslint-disable-line
+    }, [musicLanguages, view]); // eslint-disable-line
 
     // Only run track fetch if we are in 'home' view or similar simple state, OR skip auto-fetching if view is search/entity.
     useEffect(() => {
@@ -1160,7 +1159,6 @@ const Music = () => {
         e.preventDefault();
         if (searchInput.trim()) {
             performGlobalSearch(searchInput.trim());
-            setSearchInput('');
         }
     };
 
@@ -1962,7 +1960,7 @@ const Music = () => {
                                     <Plus size={18} />
                                 </button>
                                 {showBottomPlMenu && (
-                                    <div className="mu-pl-dropdown mu-entry-animate" style={{ bottom: '100%', top: 'auto', left: 0, marginBottom: 8, zIndex: 100 }}>
+                                    <div className="mu-pl-dropdown glass-panel mu-entry-animate" style={{ bottom: '100%', top: 'auto', left: 0, marginBottom: 8, zIndex: 100 }}>
                                         <p className="mu-pl-dropdown-title">Add to playlist</p>
                                         {playlists.length === 0 ? (
                                             <p className="mu-pl-empty">No custom playlists yet</p>

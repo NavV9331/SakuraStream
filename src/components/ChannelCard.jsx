@@ -2,16 +2,24 @@ import React from 'react';
 import { Play } from 'lucide-react';
 import './ChannelCard.css';
 
-const ChannelCard = ({ channel, onClick }) => {
+const ChannelCard = ({ channel, onSelect }) => {
     const [imgError, setImgError] = React.useState(false);
+
+    React.useEffect(() => {
+        setImgError(false);
+    }, [channel.logo]);
 
     const handleError = () => {
         // S6: Removed Google Favicon API fallback to prevent privacy leakage
         setImgError(true);
     };
 
+    const handleClick = React.useCallback(() => {
+        if (onSelect) onSelect(channel);
+    }, [onSelect, channel]);
+
     return (
-        <div className="channel-card glass-panel" onClick={onClick}>
+        <div className="channel-card glass-panel" onClick={handleClick}>
             <div className="card-image-wrapper">
                 {(!channel.logo || imgError) && (
                     <div className="image-fallback">
@@ -50,4 +58,4 @@ const ChannelCard = ({ channel, onClick }) => {
     );
 };
 
-export default ChannelCard;
+export default React.memo(ChannelCard);

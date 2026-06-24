@@ -1,3 +1,6 @@
+import { dlhdChannels } from './dlhdChannels';
+import cazeTVLogo from '../assets/CazeTV.png';
+
 // ── URL validation helper ──
 const isValidUrl = (url) => {
   if (!url || typeof url !== 'string') return false;
@@ -108,11 +111,17 @@ export const getProcessedChannels = async (forceRefresh = false) => {
       const langs = channelLanguagesMap.get(channel.id);
       let finalLogo = isValidUrl(channel.logo) ? channel.logo : null;
 
+      let categoryNames = (channel.categories || []).map(cid => categoryMap.get(cid) || cid);
+      if (channel.name && (channel.name.toLowerCase().includes('cazétv') || channel.name.toLowerCase().includes('cazetv'))) {
+        categoryNames = ['FIFA Channels'];
+        finalLogo = cazeTVLogo;
+      }
+
       activeChannels.push({
         ...channel,
         logo: finalLogo,
         streams: channelStreams,
-        categoryNames: (channel.categories || []).map(cid => categoryMap.get(cid) || cid),
+        categoryNames: categoryNames,
         countryName: countryMap.get(channel.country) || channel.country,
         languageNames: langs ? Array.from(langs) : []
       });
@@ -125,11 +134,21 @@ export const getProcessedChannels = async (forceRefresh = false) => {
     }
   }
 
+  // ── Inject custom DLHD channels (e.g. Fox Sports 1/2 USA) ──
+  // These use iframe-based embed players and are added separately
+  const dlhdProcessed = dlhdChannels.map(ch => ({
+    ...ch,
+    // Already fully formed; no extra processing needed
+  }));
+
+  // Prepend DLHD channels so they appear first
+  const allChannels = [...dlhdProcessed, ...activeChannels];
+
   // Store in cache
-  cachedChannels = activeChannels;
+  cachedChannels = allChannels;
   cacheTimestamp = Date.now();
 
-  return activeChannels;
+  return allChannels;
 };
 
 // Allow manual cache invalidation if needed
