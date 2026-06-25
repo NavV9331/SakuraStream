@@ -1,3 +1,7 @@
+/* ═══════════════════════════════════════════
+   VIDEO PLAYER STYLES
+   ═══════════════════════════════════════════ */
+
 .video-modal-overlay {
     position: fixed;
     inset: 0;
@@ -28,6 +32,7 @@
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-xl);
     animation: slideUp var(--transition-normal);
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 @keyframes slideUp {
@@ -35,6 +40,7 @@
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* ── Header ── */
 .video-header {
     display: flex;
     align-items: center;
@@ -42,6 +48,8 @@
     padding: 20px 24px;
     border-bottom: 1px solid var(--glass-border);
     background: linear-gradient(to right, rgba(192, 20, 60, 0.1), transparent);
+    position: relative;
+    z-index: 30;
 }
 
 .video-title {
@@ -83,6 +91,7 @@
     cursor: pointer;
     transition: var(--transition-fast);
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .close-btn:hover {
@@ -92,6 +101,14 @@
     transform: rotate(90deg);
 }
 
+.video-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ── Video Container ── */
 .video-container {
     position: relative;
     width: 100%;
@@ -122,7 +139,9 @@
     font-size: 1.25rem;
 }
 
-/* JW Player Skin Customization */
+/* ═══════════════════════════════════════════
+   JW PLAYER SKIN
+   ═══════════════════════════════════════════ */
 .jw-player-skin {
     --plyr-color-main: #c0143c;
     --plyr-video-background: #000;
@@ -249,7 +268,9 @@
     color: rgba(255, 255, 255, 0.2);
 }
 
-/* ── DLHD Iframe Player ── */
+/* ═══════════════════════════════════════════
+   DLHD IFRAME PLAYER
+   ═══════════════════════════════════════════ */
 .dlhd-iframe-container {
     display: flex;
     flex-direction: column;
@@ -262,6 +283,8 @@
     aspect-ratio: 16 / 9;
     border: none;
     background: #000;
+    position: relative;
+    z-index: 1;
 }
 
 .dlhd-source-switcher {
@@ -291,6 +314,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
 }
 
 .try-next-btn:hover:not(:disabled) {
@@ -321,13 +345,6 @@
     to   { box-shadow: 0 0 12px rgba(232, 41, 79, 0.6); }
 }
 
-.video-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
 .external-link-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
@@ -349,27 +366,357 @@
     border-color: rgba(192, 20, 60, 0.5);
 }
 
-/* ── Responsive ── */
+/* ═══════════════════════════════════════════
+   MOBILE FULLSCREEN BUTTON
+   ═══════════════════════════════════════════ */
+.mobile-fullscreen-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.mobile-fullscreen-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.mobile-fullscreen-btn:active {
+    color: #fff;
+    border-color: rgba(192, 20, 60, 0.6);
+    transform: scale(0.9);
+}
+
+.mobile-fullscreen-btn:active::before {
+    opacity: 1;
+}
+
+.mobile-fullscreen-btn svg {
+    position: relative;
+    z-index: 1;
+}
+
+.mobile-fullscreen-btn.active {
+    background: rgba(192, 20, 60, 0.25);
+    border-color: rgba(192, 20, 60, 0.6);
+    color: #e8294f;
+    box-shadow: 0 0 12px rgba(192, 20, 60, 0.3);
+}
+
+/* ── Fullscreen Touch Overlay (captures taps over iframe) ── */
+.fullscreen-touch-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    pointer-events: auto;
+    /* Transparent — only captures taps, doesn't block visuals */
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE SWIPE INDICATOR
+   ═══════════════════════════════════════════ */
+.mobile-swipe-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 0;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    background: rgba(0, 0, 0, 0.3);
+    animation: swipeHintPulse 2.5s ease-in-out infinite;
+}
+
+.mobile-swipe-indicator svg {
+    animation: swipeBounce 2s ease-in-out infinite;
+}
+
+@keyframes swipeBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+}
+
+@keyframes swipeHintPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+}
+
+/* ═══════════════════════════════════════════
+   FULLSCREEN — NATIVE BROWSER FULLSCREEN
+   ═══════════════════════════════════════════ */
+.video-modal-content:fullscreen,
+.video-modal-content:-webkit-full-screen {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    border: none !important;
+    animation: none !important;
+    background: #000 !important;
+}
+
+.video-modal-content:fullscreen .video-container,
+.video-modal-content:-webkit-full-screen .video-container {
+    flex: 1;
+    aspect-ratio: unset;
+    width: 100%;
+    height: 100%;
+}
+
+.video-modal-content:fullscreen .dlhd-iframe-container,
+.video-modal-content:-webkit-full-screen .dlhd-iframe-container {
+    flex: 1;
+    height: 100%;
+}
+
+.video-modal-content:fullscreen .dlhd-iframe,
+.video-modal-content:-webkit-full-screen .dlhd-iframe {
+    aspect-ratio: unset;
+    height: 100%;
+}
+
+.video-modal-content:fullscreen .plyr,
+.video-modal-content:-webkit-full-screen .plyr {
+    border-radius: 0 !important;
+}
+
+/* ═══════════════════════════════════════════
+   FULLSCREEN — CSS FALLBACK
+   ═══════════════════════════════════════════ */
+.video-modal-content.video-fullscreen-landscape {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    z-index: 99999;
+    border-radius: 0 !important;
+    border: none !important;
+    animation: none !important;
+    background: #000 !important;
+    margin: 0 !important;
+}
+
+.video-fullscreen-landscape .video-container {
+    flex: 1;
+    aspect-ratio: unset !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.video-fullscreen-landscape .dlhd-iframe-container {
+    flex: 1;
+    height: 100%;
+}
+
+.video-fullscreen-landscape .dlhd-iframe {
+    aspect-ratio: unset !important;
+    height: 100% !important;
+}
+
+.video-fullscreen-landscape .plyr {
+    border-radius: 0 !important;
+}
+
+/* ── Fullscreen header: overlay on top of video ── */
+.fullscreen-header {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), transparent) !important;
+    border-bottom: none !important;
+    padding: 12px 20px !important;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.fullscreen-header.controls-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.fullscreen-header.controls-hidden {
+    opacity: 0;
+    transform: translateY(-100%);
+    pointer-events: none;
+}
+
+/* Hide swipe indicator in fullscreen */
+.video-fullscreen-landscape .mobile-swipe-indicator,
+.video-modal-content:fullscreen .mobile-swipe-indicator,
+.video-modal-content:-webkit-full-screen .mobile-swipe-indicator {
+    display: none;
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE-SPECIFIC OPTIMIZATIONS
+   ═══════════════════════════════════════════ */
+
+/* Touch-friendly targets (min 44px) */
+.mobile-optimized .close-btn,
+.mobile-optimized .mobile-fullscreen-btn {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+}
+
+.mobile-optimized .try-next-btn {
+    min-height: 44px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+}
+
+/* Prevent text selection on touch */
+.mobile-optimized {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Remove tap highlight on all interactive elements */
+.mobile-optimized button,
+.mobile-optimized a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Smoother touch scrolling in iframe */
+.mobile-optimized .dlhd-iframe-container {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════ */
+
+/* ── Tablet (≤ 768px) ── */
 @media (max-width: 768px) {
-    .video-modal-overlay { padding: 16px; }
-    .video-modal-content { border-radius: var(--radius-lg); }
-    .jw-player-skin .plyr { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
-    .jw-play-button { width: 60px; height: 60px; }
-    .jw-play-button svg { width: 24px; height: 24px; }
+    .video-modal-overlay {
+        padding: 0;
+        align-items: flex-start;
+    }
+    .video-modal-content {
+        border-radius: 0;
+        max-width: 100%;
+        box-shadow: none;
+        border: none;
+    }
+    .jw-player-skin .plyr {
+        border-radius: 0;
+    }
+    .video-header {
+        padding: 12px 16px;
+    }
+    .jw-play-button { width: 64px; height: 64px; }
+    .jw-play-button svg { width: 26px; height: 26px; }
     .jw-play-button-wrapper { width: 80px; height: 80px; }
     .dlhd-source-switcher { padding: 8px 12px; }
+
+    /* Full-width video container — remove gaps */
+    .video-container {
+        border-radius: 0;
+    }
 }
 
+/* ── Mobile (≤ 480px) ── */
 @media (max-width: 480px) {
-    .video-modal-overlay { padding: 8px; align-items: flex-start; padding-top: 40px; }
-    .video-modal-content { border-radius: var(--radius-md); }
-    .video-header { padding: 12px 14px; gap: 8px; }
-    .video-title h3 { font-size: 0.9rem; }
-    .video-title { gap: 8px; }
-    .close-btn { width: 30px; height: 30px; }
-    .video-error { padding: 16px; gap: 12px; }
-    .video-error h3 { font-size: 1rem; }
-    .dlhd-source-switcher { flex-direction: column; gap: 6px; }
-    .try-next-btn { width: 100%; text-align: center; }
+    .video-header {
+        padding: 10px 12px;
+        gap: 6px;
+    }
+    .video-title {
+        gap: 8px;
+    }
+    .video-title h3 {
+        font-size: 0.85rem;
+    }
+    .video-header-logo {
+        width: 24px;
+        height: 24px;
+    }
+    .close-btn {
+        width: 36px;
+        height: 36px;
+    }
+    .video-error {
+        padding: 16px;
+        gap: 12px;
+    }
+    .video-error h3 {
+        font-size: 1rem;
+    }
+    .dlhd-source-switcher {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .try-next-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .jw-play-button { width: 56px; height: 56px; }
+    .jw-play-button svg { width: 22px; height: 22px; }
+    .jw-play-button-wrapper { width: 70px; height: 70px; }
+
+    /* Tighter Plyr controls on small screens */
+    .jw-player-skin .plyr__controls {
+        padding: 12px 8px 6px !important;
+    }
 }
 
+/* ── Landscape on mobile ── */
+@media (max-height: 500px) and (orientation: landscape) {
+    .video-modal-overlay {
+        padding: 0;
+    }
+    .video-modal-content {
+        border-radius: 0;
+        max-width: 100%;
+    }
+    .video-header {
+        padding: 6px 12px;
+    }
+    .video-title h3 {
+        font-size: 0.8rem;
+    }
+    .video-header-logo {
+        width: 20px;
+        height: 20px;
+    }
+    .video-container {
+        aspect-ratio: unset;
+        height: calc(100vh - 40px);
+    }
+    .dlhd-iframe {
+        aspect-ratio: unset;
+    }
+    .mobile-swipe-indicator {
+        display: none;
+    }
+}

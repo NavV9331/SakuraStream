@@ -86,6 +86,13 @@
     }
     .embedded-player-wrapper {
         border-bottom: none;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    /* Edge-to-edge player on mobile */
+    .embedded-player {
+        border-radius: 0 !important;
     }
 }
 
@@ -96,4 +103,9 @@
     .loader-container h2 {
         font-size: 1.2rem !important;
     }
+    /* Safe area for notched phones */
+    .embedded-player-wrapper {
+        padding-top: env(safe-area-inset-top, 0);
+    }
 }
+
