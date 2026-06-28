@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SakuraStream — Watch Movies & TV Shows Online Free in HD</title>
+  <meta name="description" content="SakuraStream is your ultimate destination for streaming movies and TV shows online in HD quality for free. Discover trending titles, top-rated films, and popular series." />
+  <meta name="keywords" content="watch movies online, free movies, streaming, TV shows, HD movies, watch series online, SakuraStream" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#060304" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SakuraStream — Watch Movies & TV Shows Online Free in HD" />
+  <meta property="og:description" content="Stream the latest movies and TV shows in HD quality. Your ultimate destination for online entertainment." />
+  <meta property="og:url" content="https://sakurastream.online" />
+  <meta property="og:site_name" content="SakuraStream" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SakuraStream — Watch Movies & TV Shows Online Free in HD" />
+  <meta name="twitter:description" content="Stream the latest movies and TV shows in HD quality." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet" />
+
+  <!-- Preconnect to TMDB -->
+  <link rel="preconnect" href="https://api.themoviedb.org" />
+  <link rel="preconnect" href="https://image.tmdb.org" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://sakurastream.online/sakura_logo.png" />
+</head>
+<body>
+  <!-- Top Loading Bar -->
+  <div class="top-loader" id="topLoader"></div>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-logo">Sakura<span style="color:#e8294f">Stream.</span></div>
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="mainNav">
+    <a href="#/" class="nav-brand" id="navBrand">
+      <img src="https://sakurastream.online/sakura_logo.png" alt="SakuraStream Logo" style="width: 26px; height: 26px; border-radius: 4px; object-fit: contain;">
+      <span class="nav-brand-text">Sakura<span class="accent-dot">Stream.</span></span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="/" class="nav-link">
+        <span>Home</span>
+      </a>
+      <a href="#/movies" class="nav-link" data-page="movies">
+        <span>Movies</span>
+      </a>
+      <a href="#/tv" class="nav-link" data-page="tv">
+        <span>TV Shows</span>
+      </a>
+      <a href="#/watchlist" class="nav-link" data-page="watchlist">
+        <span>Watchlist</span>
+      </a>
+      <a href="/live" class="nav-link">
+        <span>Live Channels</span>
+      </a>
+      <a href="/music" class="nav-link">
+        <span>Music</span>
+      </a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="nav-action-btn" id="searchBtn" aria-label="Search" onclick="navigate('/search')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="nav-mobile-toggle" id="mobileMenuBtn" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="mobileMenuClose">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+    <a href="/" class="nav-link" onclick="closeMobileMenu()">Home</a>
+    <a href="#/movies" class="nav-link" onclick="closeMobileMenu()">Movies</a>
+    <a href="#/tv" class="nav-link" onclick="closeMobileMenu()">TV Shows</a>
+    <a href="#/watchlist" class="nav-link" onclick="closeMobileMenu()">Watchlist</a>
+    <a href="/live" class="nav-link" onclick="closeMobileMenu()">Live Channels</a>
+    <a href="/music" class="nav-link" onclick="closeMobileMenu()">Music</a>
+  </div>
+
+
+
+  <!-- Main App Container -->
+  <div id="app"></div>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>

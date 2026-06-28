@@ -32,6 +32,10 @@ const Home = () => {
                             <Play size={22} fill="currentColor" />
                             Watch Live TV
                         </button>
+                        <button className="btn-hero-secondary" onClick={() => window.location.href = '/vod/index.html'}>
+                            <Tv size={22} />
+                            Movies & Shows
+                        </button>
                         <button className="btn-hero-secondary" onClick={() => navigate('/music')}>
                             <Headphones size={22} />
                             Listen to Music
@@ -52,6 +56,17 @@ const Home = () => {
                         <div className="bento-text">
                             <h3>Live World TV</h3>
                             <p>Dive into over 6,000+ aggregated free TV channels streaming directly from nations across the globe. No subscriptions required.</p>
+                        </div>
+                    </div>
+
+                    {/* Card 1.5: Wide - Movies & TV */}
+                    <div className="feature-card glass-panel bento-wide" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/vod/index.html'}>
+                        <div className="feature-icon-wrapper">
+                            <Play size={32} />
+                        </div>
+                        <div className="bento-text">
+                            <h3>On-Demand Movies & Series</h3>
+                            <p>Stream the latest blockbuster movies and binge-worthy TV series on demand in HD quality, with a fully responsive custom player.</p>
                         </div>
                     </div>
 

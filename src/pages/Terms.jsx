@@ -19,12 +19,12 @@ const Terms = () => {
             <div className="terms-content glass-panel">
                 <section className="terms-section">
                     <h2>1. Introduction</h2>
-                    <p>Welcome to SakuraStream. By accessing and using our platform, you agree to these Terms and Conditions and our Privacy Policy. Our service aggregates free, publicly available IPTV streams and music APIs for entertainment purposes.</p>
+                    <p>Welcome to SakuraStream. By accessing and using our platform, you agree to these Terms and Conditions and our Privacy Policy. Our service aggregates free, publicly available IPTV streams, music APIs, and on-demand movies & series for entertainment purposes.</p>
                 </section>
 
                 <section className="terms-section">
-                    <h2>2. Intellectual Property</h2>
-                    <p>SakuraStream does not host any media content on its servers. All streams and audio tracks are provided by third-party APIs (such as iptv-org and JioSaavn). All copyrights, trademarks, and intellectual properties belong to their respective owners.</p>
+                    <h2>2. Intellectual Property & Third-Party APIs</h2>
+                    <p>SakuraStream does not host any media content on its servers. All live streams, audio tracks, and on-demand videos are provided by third-party APIs (such as iptv-org, JioSaavn, and TMDb). All copyrights, trademarks, and intellectual properties belong to their respective owners. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
                 </section>
 
                 <section className="terms-section">

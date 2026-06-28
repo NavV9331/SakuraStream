@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Search, Tv, Map, Hash, Menu, X, Globe, ChevronDown, ChevronRight } from 'lucide-react';
 import './Sidebar.css';
 
@@ -13,10 +13,39 @@ const Sidebar = ({
     activeLanguage,
     onLanguageSelect
 }) => {
-    const [isOpen, setIsOpen] = React.useState(window.innerWidth > 768);
-    const [isCategoriesExpanded, setIsCategoriesExpanded] = React.useState(true);
-    const [isLanguagesExpanded, setIsLanguagesExpanded] = React.useState(true);
-    const [isCountriesExpanded, setIsCountriesExpanded] = React.useState(true);
+    const [isOpen, setIsOpen] = useState(window.innerWidth > 768);
+    const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
+    const [isLanguagesExpanded, setIsLanguagesExpanded] = useState(true);
+    const [isCountriesExpanded, setIsCountriesExpanded] = useState(true);
+    const [localSearch, setLocalSearch] = useState(searchTerm);
+
+    // Update localSearch if external searchTerm changes (e.g. cleared)
+    useEffect(() => {
+        setLocalSearch(searchTerm);
+    }, [searchTerm]);
+
+    const debouncedSearch = useCallback(
+        debounce((term) => onSearch(term), 300),
+        [onSearch]
+    );
+
+    const handleSearchChange = (e) => {
+        setLocalSearch(e.target.value);
+        debouncedSearch(e.target.value);
+    };
+
+    // Helper for debouncing
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
     // Extract unique categories and countries with counts
     const categories = React.useMemo(() => {
@@ -92,8 +121,8 @@ const Sidebar = ({
                     <input
                         type="text"
                         placeholder="Search channels..."
-                        value={searchTerm}
-                        onChange={(e) => onSearch(e.target.value)}
+                        value={localSearch}
+                        onChange={handleSearchChange}
                     />
                 </div>
 

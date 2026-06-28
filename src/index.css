@@ -142,3 +142,16 @@ body::after {
 .sidebar.closed + .main-content .channel-list-container {
   padding-left: 80px;
 }
+
+/* --- TV Optimization --- */
+.tv-mode *:focus, .tv-mode .tv-focus { outline: 4px solid var(--accent) !important; outline-offset: 4px; border-radius: inherit; box-shadow: 0 0 20px rgba(192, 20, 60, 0.8); transform: scale(1.05); transition: transform 0.2s, outline 0.1s; z-index: 50; position: relative; }
+
+
+
+/* --- Mobile Optimization --- */
+@media (max-width: 768px) { .nav-link, .btn-hero-primary, .btn-hero-secondary, .feature-card { min-height: 44px; min-width: 44px; } }
+
+
+/* --- Performance Override --- */
+@media (max-width: 768px) { * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+

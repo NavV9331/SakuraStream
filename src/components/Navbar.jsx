@@ -58,6 +58,9 @@ const Navbar = () => {
                         onClick={() => setMobileOpen(false)}>
                         Home
                     </NavLink>
+                    <a href="/vod/index.html" className="nav-link" onClick={() => setMobileOpen(false)}>
+                        Movies & TV
+                    </a>
                     <NavLink to="/live" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                         onClick={() => setMobileOpen(false)}>
                         Live Channels

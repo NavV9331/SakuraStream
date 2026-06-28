@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import { useSpatialNavigation } from './hooks/useSpatialNavigation';
 
 // Lazy-loaded pages — only downloaded when the user navigates to them
 const Home = React.lazy(() => import('./pages/Home'));
@@ -21,6 +22,7 @@ const PageLoader = () => (
 );
 
 function App() {
+  useSpatialNavigation();
   const location = useLocation();
   const hideNav = location.pathname === '/music';
 

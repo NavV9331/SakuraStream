@@ -397,3 +397,8 @@
     }
     .feature-card { padding: 20px 16px; }
 }
+
+
+/* --- Performance Override (GPU Acceleration) --- */
+.hero-content, .ambient-eq-container, .feature-card, canvas { will-change: transform; transform: translateZ(0); }
+
