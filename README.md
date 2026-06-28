@@ -1,6 +1,5 @@
 # SakuraStream 🌸
 
-![SakuraStream](public/sakura_logo.png)
 
 **SakuraStream** is the ultimate entertainment hub—a premium, beautifully crafted platform merging over 6,000+ free live global TV channels, an ad-free music studio, and on-demand movies and series into one seamless experience.
 
