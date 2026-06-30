@@ -230,8 +230,10 @@
     .navbar-sticky { padding: 12px 0; }
 }
 
-@media (max-width: 480px) {
+    @media (max-width: 480px) {
     .navbar-brand h2 {
         font-size: 1.3rem !important;
     }
 }
+
+

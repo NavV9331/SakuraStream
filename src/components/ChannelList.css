@@ -1,5 +1,7 @@
 .channel-list-container {
     flex: 1;
+    min-height: 0;
+    overflow-y: auto;
     padding: 32px;
     display: flex;
     flex-direction: column;

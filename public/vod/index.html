@@ -109,5 +109,39 @@
 
   <!-- App Script -->
   <script src="app.js"></script>
+
+  <!-- Electron Link Fixes (Iframe Integration) -->
+  <script>
+    if (window.location.protocol === 'file:' || window.self !== window.top) {
+      document.addEventListener('DOMContentLoaded', () => {
+        // Hide VOD native navbar to use the parent's ElectronTitlebar
+        const mainNav = document.getElementById('mainNav');
+        if (mainNav) mainNav.style.display = 'none';
+        
+        // Remove top padding from app container
+        const app = document.getElementById('app');
+        if (app) app.style.paddingTop = '0px';
+
+        // Override links to navigate the parent React HashRouter
+        document.querySelectorAll('a.nav-link, a.nav-brand').forEach(a => {
+          const href = a.getAttribute('href');
+          a.removeAttribute('href'); // Prevent default navigation
+          a.style.cursor = 'pointer';
+          a.onclick = (e) => {
+            e.preventDefault();
+            if (href === '/' || href === '#/') window.parent.location.hash = '#/';
+            else if (href === '/live') window.parent.location.hash = '#/live';
+            else if (href === '/music') window.parent.location.hash = '#/music';
+            else window.location.hash = href.replace('/', ''); // Internal VOD routes
+          };
+        });
+
+        const searchBtn = document.getElementById('searchBtn');
+        if (searchBtn) {
+          searchBtn.setAttribute('onclick', "window.location.hash='#/search'");
+        }
+      });
+    }
+  </script>
 </body>
 </html>

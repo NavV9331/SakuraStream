@@ -39,10 +39,10 @@
 }
 
 html {
-  /* Resizes the entire global interface down, scaling px/em/rem making the interface proportional and less bulky */
-  zoom: 0.85; 
   height: 100%;
+  width: 100%;
   overflow: hidden;
+  background-color: var(--bg-primary);
 }
 
 * {
@@ -65,12 +65,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
 #root {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -143,15 +145,159 @@ body::after {
   padding-left: 80px;
 }
 
-/* --- TV Optimization --- */
-.tv-mode *:focus, .tv-mode .tv-focus { outline: 4px solid var(--accent) !important; outline-offset: 4px; border-radius: inherit; box-shadow: 0 0 20px rgba(192, 20, 60, 0.8); transform: scale(1.05); transition: transform 0.2s, outline 0.1s; z-index: 50; position: relative; }
+/* ═══════════════════════════════════════════
+   TV OPTIMIZATION — 10-Foot UI
+   ═══════════════════════════════════════════ */
+
+/* Base TV focus styles */
+.tv-mode *:focus,
+.tv-mode .tv-focus {
+  outline: 4px solid var(--accent-color) !important;
+  outline-offset: 6px;
+  border-radius: inherit;
+  box-shadow: 0 0 30px rgba(232, 41, 79, 0.6), 0 0 60px rgba(232, 41, 79, 0.2);
+  transform: scale(1.06);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), outline 0.15s ease, box-shadow 0.25s ease;
+  z-index: 50;
+  position: relative;
+}
+
+/* TV mode — larger text and elements for 10-foot viewing distance */
+.tv-mode {
+  font-size: 1.1rem;
+}
+
+.tv-mode .nav-link {
+  font-size: 1.2rem;
+  padding: 12px 24px;
+}
+
+.tv-mode .channel-name {
+  font-size: 1.3rem;
+}
+
+.tv-mode .filter-btn {
+  padding: 14px 18px;
+  font-size: 1.05rem;
+}
+
+.tv-mode .hero-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+}
+
+.tv-mode .hero-subtitle {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+}
+
+.tv-mode .btn-hero-primary,
+.tv-mode .btn-hero-secondary {
+  font-size: 1.4rem;
+  padding: 20px 48px;
+}
+
+/* Hide scrollbars on TV (D-pad scrolls instead) */
+.tv-mode ::-webkit-scrollbar { width: 0; height: 0; }
+.tv-mode * { scrollbar-width: none; }
+
+/* Hide mouse-only elements on TV */
+.tv-mode .mobile-toggle { display: none; }
+.tv-mode .navbar-hamburger { display: none; }
+
+/* TV-specific card grid — larger cards */
+@media (min-width: 1280px) {
+  .tv-mode .channel-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+  }
+  .tv-mode .card-image-wrapper {
+    height: 200px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   ANDROID TV / FIRE TV — Leanback Style
+   ═══════════════════════════════════════════ */
+.is-tv .channel-card:focus,
+.is-tv .channel-card.tv-focus {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 4px var(--accent-color), 0 20px 40px rgba(0, 0, 0, 0.6);
+  border-color: var(--accent-color);
+}
+
+.is-tv .filter-btn:focus,
+.is-tv .filter-btn.tv-focus {
+  background: var(--accent-soft);
+  border-color: var(--accent-color);
+}
+
+/* Safe area padding for TV overscan */
+.is-tv body {
+  padding: 24px 48px;
+}
+
+.is-tv .navbar-container {
+  padding: 0 48px;
+}
 
 
+/* ═══════════════════════════════════════════
+   MOBILE OPTIMIZATION
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav-link, .btn-hero-primary, .btn-hero-secondary, .feature-card {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
 
-/* --- Mobile Optimization --- */
-@media (max-width: 768px) { .nav-link, .btn-hero-primary, .btn-hero-secondary, .feature-card { min-height: 44px; min-width: 44px; } }
+/* ═══════════════════════════════════════════
+   CAPACITOR / ANDROID APP
+   ═══════════════════════════════════════════ */
+
+/* Safe area insets for notched phones */
+.is-capacitor body {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.is-capacitor .navbar {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+/* Android status bar space */
+.is-android .navbar-fixed {
+  padding-top: max(16px, env(safe-area-inset-top, 0));
+}
+
+/* ═══════════════════════════════════════════
+   ELECTRON DESKTOP APP
+   ═══════════════════════════════════════════ */
+
+/* Disable zoom on Electron (handled by menu) */
+.is-electron html {
+  zoom: 1;
+}
+
+/* Remove noise overlay lag in Electron */
+.is-electron body::after {
+  opacity: 0.025;
+}
 
 
-/* --- Performance Override --- */
-@media (max-width: 768px) { * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+/* ═══════════════════════════════════════════
+   PERFORMANCE OVERRIDES
+   ═══════════════════════════════════════════ */
 
+/* Disable backdrop-filter on mobile for performance */
+@media (max-width: 768px) {
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* GPU acceleration for animated elements */
+.hero-content, .ambient-eq-container, .feature-card, canvas {
+  will-change: transform;
+  transform: translateZ(0);
+}

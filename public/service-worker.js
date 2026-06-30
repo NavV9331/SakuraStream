@@ -32,6 +32,8 @@ self.addEventListener("fetch", event => {
   if (
     url.pathname.endsWith('.m3u8') ||
     url.pathname.endsWith('.ts') ||
+    url.pathname.endsWith('.exe') ||
+    url.pathname.endsWith('.apk') ||
     url.hostname.includes('iptv-org') ||
     url.hostname.includes('jiosaavn') ||
     url.hostname.includes('google') ||

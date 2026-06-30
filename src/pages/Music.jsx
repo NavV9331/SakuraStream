@@ -15,8 +15,10 @@ import './Music.css';
 
 
 const JIOSAAVN_BASE = 'https://jiosaavnn.vercel.app';
+const GLOBAL_LANG_QUERY = 'hindi,english,punjabi,tamil,telugu,marathi,gujarati,bengali,kannada,bhojpuri,malayalam';
 
 const LANG_LIST = [
+    'Global',
     'Hindi', 'English',
     'Punjabi', 'Tamil',
     'Telugu', 'Marathi',
@@ -462,6 +464,8 @@ const MiniRow = ({ item, isCurrent, playlists, onAddToPlaylist, onCreatePlaylist
    MAIN COMPONENT
 ═══════════════════════════════════════════════════════════ */
 const Music = () => {
+    const navigate = useNavigate();
+
     /* ── Data ── */
     const [tracks, setTracks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -758,7 +762,7 @@ const Music = () => {
     const fetchMusic = useCallback(async (q) => {
         if (!q) return;
         setLoading(true); setError(null);
-        const lang = musicLanguages[0]?.toLowerCase() ?? '';
+        const lang = (musicLanguages.includes('Global') || musicLanguages.length === 0) ? GLOBAL_LANG_QUERY : musicLanguages.join(',').toLowerCase();
         const enrichedQ = lang && !q.toLowerCase().includes(lang) ? `${q} ${lang}` : q;
         try {
             const res = await fetch(`${JIOSAAVN_BASE}/search/songs?query=${encodeURIComponent(enrichedQ)}&limit=50`);
@@ -792,7 +796,7 @@ const Music = () => {
     const performGlobalSearch = async (q) => {
         setLoading(true); setError(null);
         try {
-            const lang = musicLanguages[0]?.toLowerCase() ?? '';
+            const lang = (musicLanguages.includes('Global') || musicLanguages.length === 0) ? GLOBAL_LANG_QUERY : musicLanguages.join(',').toLowerCase();
             const enrichedQ = lang && !q.toLowerCase().includes(lang) ? `${q} ${lang}` : q;
             const res = await fetch(`${JIOSAAVN_BASE}/search/all?query=${encodeURIComponent(enrichedQ)}`);
             if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -944,7 +948,7 @@ const Music = () => {
         const loadHome = async () => {
             setLoading(true);
             try {
-                const lang = musicLanguages.join(',').toLowerCase();
+                const lang = (musicLanguages.includes('Global') || musicLanguages.length === 0) ? GLOBAL_LANG_QUERY : musicLanguages.join(',').toLowerCase();
                 const res = await fetch(`${JIOSAAVN_BASE}/modules?language=${lang}`);
                 if (!res.ok) return;
                 const json = await res.json();
@@ -959,7 +963,7 @@ const Music = () => {
                     // Deep Search Enrichment: Fetch more regional hits
                     let enrichedSongs = [];
                     try {
-                        const primLang = musicLanguages[0] || 'Hindi';
+                        const primLang = (musicLanguages.includes('Global') || musicLanguages.length === 0) ? 'English' : (musicLanguages[0] || 'Hindi');
                         const enrichRes = await fetch(`${JIOSAAVN_BASE}/search/songs?query=trending+${primLang.toLowerCase()}+2025&limit=40`);
                         const enrichJson = await enrichRes.json();
                         if (enrichJson.status === 'SUCCESS' && enrichJson.data?.results) {
@@ -1180,7 +1184,6 @@ const Music = () => {
         pl.name.toLowerCase().includes(libSearch.toLowerCase())
     );
 
-    const navigate = useNavigate();
 
     const mixedTrending = React.useMemo(() => {
         const list = [...trendingTracks.slice(0, 3)];
@@ -1354,7 +1357,7 @@ const Music = () => {
                         </button>
                         <button
                             className="mu-nav-btn"
-                            onClick={() => window.location.href = '/'}
+                            onClick={() => navigate('/')}
                             title="Go to Main Home"
                         >
                             <Home size={18} />
@@ -1416,11 +1419,13 @@ const Music = () => {
                                                     e.stopPropagation();
                                                     setPendingLanguages(prev => {
                                                         const base = prev || [...musicLanguages];
-                                                        if (base.includes(lang)) {
-                                                            if (base.length > 1) return base.filter(l => l !== lang);
-                                                            return base;
+                                                        if (lang === 'Global') return ['Global'];
+                                                        const newBase = base.filter(l => l !== 'Global');
+                                                        if (newBase.includes(lang)) {
+                                                            if (newBase.length > 1) return newBase.filter(l => l !== lang);
+                                                            return newBase;
                                                         }
-                                                        return [...base, lang];
+                                                        return [...newBase, lang];
                                                     });
                                                 }}>
                                                 <span>{lang}</span>
@@ -2006,9 +2011,24 @@ const Music = () => {
                     </div>
                     <div className="mu-progress-wrap">
                         <span className="mu-time">{fmtTime(elapsed)}</span>
-                        <div className="mu-progress" ref={progressRef} onClick={scrubProgress}>
+                        <div className="mu-progress" ref={progressRef}>
                             <div className="mu-progress-fill" style={{ width: `${progress}%` }} />
                             <div className="mu-progress-knob" style={{ left: `${progress}%` }} />
+                            <input
+                                type="range"
+                                min="0" max="100" step="0.1"
+                                value={progress || 0}
+                                onChange={(e) => {
+                                    const val = parseFloat(e.target.value);
+                                    setProgress(val);
+                                    if (audioRef.current && audioRef.current.duration) {
+                                        const newTime = (val / 100) * audioRef.current.duration;
+                                        audioRef.current.currentTime = newTime;
+                                        setElapsed(newTime);
+                                    }
+                                }}
+                                className="mu-range-overlay"
+                            />
                         </div>
                         <span className="mu-time">{fmtTime(duration)}</span>
                     </div>
@@ -2025,9 +2045,21 @@ const Music = () => {
                         <button className="mu-player-btn" onClick={() => setIsMuted(m => !m)} title="Mute (M)">
                             {isMuted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
                         </button>
-                        <div className="mu-volume" ref={volumeRef} onClick={scrubVolume}>
+                        <div className="mu-volume" ref={volumeRef}>
                             <div className="mu-volume-fill" style={{ width: `${effectiveVol * 100}%` }} />
                             <div className="mu-volume-knob" style={{ left: `${effectiveVol * 100}%` }} />
+                            <input
+                                type="range"
+                                min="0" max="1" step="0.01"
+                                value={effectiveVol}
+                                onChange={(e) => {
+                                    const val = parseFloat(e.target.value);
+                                    setVolume(val);
+                                    setIsMuted(val === 0);
+                                    if (audioRef.current) audioRef.current.volume = val;
+                                }}
+                                className="mu-range-overlay"
+                            />
                         </div>
                     </div>
                 </div>

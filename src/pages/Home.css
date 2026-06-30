@@ -402,3 +402,6 @@
 /* --- Performance Override (GPU Acceleration) --- */
 .hero-content, .ambient-eq-container, .feature-card, canvas { will-change: transform; transform: translateZ(0); }
 
+
+
+

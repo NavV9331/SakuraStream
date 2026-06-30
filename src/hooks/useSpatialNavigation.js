@@ -8,6 +8,19 @@ export function useSpatialNavigation() {
       document.body.classList.add('tv-mode');
     };
 
+    // ── Auto-enable TV mode on TV devices ──
+    const isTV = false; // TV logic disabled for pure web
+    if (isTV) {
+      enableTvMode();
+      // Auto-focus the first focusable element on load
+      setTimeout(() => {
+        const els = getFocusable();
+        if (els.length > 0) {
+          setActive(els[0]);
+        }
+      }, 500);
+    }
+
     const getFocusable = () => {
       return Array.from(document.querySelectorAll('a[href], button, select, input, [tabindex]:not([tabindex="-1"])'))
         .filter(el => {
@@ -26,7 +39,43 @@ export function useSpatialNavigation() {
       el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     };
 
+    // ── Sound feedback for TV navigation (subtle) ──
+    const playNavSound = () => {
+      // Only on TV devices — creates a very short, subtle tick
+      if (!isTV) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 600;
+        gain.gain.value = 0.03;
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+        osc.stop(ctx.currentTime + 0.06);
+      } catch (e) { /* ignore if AudioContext unavailable */ }
+    };
+
     const handleKeyDown = (e) => {
+      // ── Back button handling (Android TV remote, Escape key) ──
+      if (e.key === 'Escape' || e.key === 'GoBack' || e.keyCode === 27 || e.keyCode === 4) {
+        // Check if there's a close button or back button visible
+        const closeBtn = document.querySelector('.close-btn') || document.querySelector('.btn-back');
+        if (closeBtn && closeBtn.offsetParent !== null) {
+          e.preventDefault();
+          closeBtn.click();
+          return;
+        }
+        // If on a sub-page, navigate back
+        if (window.location.pathname !== '/' && window.location.pathname !== '/vod/index.html') {
+          e.preventDefault();
+          window.history.back();
+          return;
+        }
+        return; // Let default behavior handle (exit app)
+      }
+
       if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) return;
       enableTvMode();
 
@@ -85,12 +134,26 @@ export function useSpatialNavigation() {
         }
       });
 
-      if (best) setActive(best);
+      if (best) {
+        setActive(best);
+        playNavSound();
+      }
+    };
+
+    // ── Long-press detection for TV remotes ──
+    let longPressTimer = null;
+    const handleKeyUp = (e) => {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
 }

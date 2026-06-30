@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { useSpatialNavigation } from './hooks/useSpatialNavigation';
 
@@ -8,6 +8,8 @@ const Home = React.lazy(() => import('./pages/Home'));
 const LiveTV = React.lazy(() => import('./pages/LiveTV'));
 const Music = React.lazy(() => import('./pages/Music'));
 const Terms = React.lazy(() => import('./pages/Terms'));
+
+const Vod = React.lazy(() => import('./pages/Vod'));
 
 // Minimal loading fallback
 const PageLoader = () => (
@@ -24,17 +26,20 @@ const PageLoader = () => (
 function App() {
   useSpatialNavigation();
   const location = useLocation();
-  const hideNav = location.pathname === '/music';
+  const navigate = useNavigate();
+  const hideNav = location.pathname === '/music' || location.pathname === '/vod';
 
+// Web Layout
   return (
     <>
-      {!hideNav && <Navbar />}
+      {(!hideNav) && <Navbar />}
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/live" element={<LiveTV />} />
           <Route path="/music" element={<Music />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/vod" element={<Vod />} />
         </Routes>
       </Suspense>
     </>

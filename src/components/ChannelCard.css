@@ -7,24 +7,26 @@
     flex-direction: column;
 }
 
-.channel-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(232, 41, 79, 0.08) 100%);
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-    pointer-events: none;
-    z-index: 1;
+.channel-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.1s ease, border-color 0.1s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .channel-card:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: var(--shadow-lg), 0 0 20px rgba(232, 41, 79, 0.1);
-    border-color: rgba(232, 41, 79, 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+    border-color: rgba(255, 255, 255, 0.12);
+    background: var(--bg-glass-hover);
 }
 
-.channel-card:hover::before { opacity: 1; }
+.channel-card:active {
+    transform: scale(0.98);
+    background: var(--bg-glass);
+}
 
 .card-image-wrapper {
     position: relative;
