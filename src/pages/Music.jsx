@@ -713,6 +713,15 @@ const Music = () => {
 
             if (!link) return;
             audio.src = link;
+            
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: currentTrack.name || 'Unknown Track',
+                    artist: getArtistText(currentTrack),
+                    artwork: [{ src: getArt(currentTrack, '500x500'), sizes: '500x500', type: 'image/jpeg' }]
+                });
+            }
+
             setProgress(0); setElapsed(0); setDuration(0);
             if (isPlaying) audio.play().catch(() => setIsPlaying(false));
         };
@@ -1090,6 +1099,16 @@ const Music = () => {
         const prev = (idxRef.current - 1 + list.length) % list.length;
         setCurrentIndex(prev); setCurrentTrack(list[prev]); setIsPlaying(true);
     }, []);
+
+    /* ── MediaSession Controls ── */
+    useEffect(() => {
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', () => setIsPlaying(true));
+            navigator.mediaSession.setActionHandler('pause', () => setIsPlaying(false));
+            navigator.mediaSession.setActionHandler('previoustrack', skipPrev);
+            navigator.mediaSession.setActionHandler('nexttrack', skipNext);
+        }
+    }, [skipPrev, skipNext]);
 
     /* ── Keyboard Shortcuts ── */
     useEffect(() => {

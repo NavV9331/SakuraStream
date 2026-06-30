@@ -27,7 +27,7 @@ function App() {
   useSpatialNavigation();
   const location = useLocation();
   const navigate = useNavigate();
-  const hideNav = location.pathname === '/music' || location.pathname === '/vod';
+  const hideNav = location.pathname === '/music';
 
 // Web Layout
   return (

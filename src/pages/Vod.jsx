@@ -2,7 +2,7 @@ import React from 'react';
 
 const Vod = () => {
     return (
-        <div style={{ width: '100%', height: 'calc(100vh - 38px)', overflow: 'hidden' }}>
+        <div style={{ width: '100%', height: 'calc(100vh - 64px)', marginTop: '64px', overflow: 'hidden' }}>
             <iframe 
                 src="vod/index.html" 
                 title="Movies & TV"
